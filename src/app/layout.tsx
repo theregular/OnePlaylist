@@ -5,6 +5,7 @@ import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { Navbar } from "~/components/Navbar";
+import { ThemeToggle } from "~/components/ThemeToggle";
 
 export const metadata: Metadata = {
   title: "OnePlaylist",
@@ -23,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable}`}>
       <body>
+        <ThemeToggle />
         <TRPCReactProvider>
           {/* <Navbar /> */}
           {children}
