@@ -6,11 +6,19 @@ import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
 const config = {
-    images: {
+  images: {
     remotePatterns: [
       {
         protocol: "https",
         hostname: "i1.sndcdn.com",
+      },
+      {
+        protocol: "https",
+        hostname: "i.scdn.co",
+      },
+      {
+        protocol: "https",
+        hostname: "platform-lookaside.fbsbx.com",
       },
     ],
   },

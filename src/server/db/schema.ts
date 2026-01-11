@@ -94,6 +94,7 @@ export const verification = pgTable("verification", {
 export const userRelations = relations(user, ({ many }) => ({
   account: many(account),
   session: many(session),
+  playlists: many(playlists),
 }));
 
 export const accountRelations = relations(account, ({ one }) => ({
@@ -102,4 +103,70 @@ export const accountRelations = relations(account, ({ one }) => ({
 
 export const sessionRelations = relations(session, ({ one }) => ({
   user: one(user, { fields: [session.userId], references: [user.id] }),
+}));
+
+// Playlists
+export const playlists = createTable(
+  "playlist",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    userId: d
+      .text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    name: d.varchar({ length: 256 }).notNull(),
+    description: d.text(),
+    isPublic: d
+      .boolean()
+      .$defaultFn(() => false)
+      .notNull(),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  }),
+  (t) => [
+    index("playlist_user_idx").on(t.userId),
+    index("playlist_public_idx").on(t.isPublic),
+    index("playlist_created_at_idx").on(t.createdAt),
+  ],
+);
+
+export const playlistTracks = createTable(
+  "playlist_track",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    playlistId: d
+      .integer()
+      .notNull()
+      .references(() => playlists.id, { onDelete: "cascade" }),
+    position: d.integer().notNull(),
+    platform: d.varchar({ length: 50 }).notNull(), // 'spotify', 'soundcloud', etc.
+    platformTrackId: d.varchar({ length: 256 }).notNull(),
+    title: d.varchar({ length: 512 }).notNull(),
+    artist: d.varchar({ length: 512 }).notNull(),
+    artworkUrl: d.text(),
+    duration: d.integer(), // duration in milliseconds
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+  }),
+  (t) => [
+    index("playlist_track_playlist_idx").on(t.playlistId),
+    index("playlist_track_position_idx").on(t.playlistId, t.position),
+  ],
+);
+
+export const playlistRelations = relations(playlists, ({ one, many }) => ({
+  user: one(user, { fields: [playlists.userId], references: [user.id] }),
+  tracks: many(playlistTracks),
+}));
+
+export const playlistTrackRelations = relations(playlistTracks, ({ one }) => ({
+  playlist: one(playlists, {
+    fields: [playlistTracks.playlistId],
+    references: [playlists.id],
+  }),
 }));

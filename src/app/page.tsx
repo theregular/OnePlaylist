@@ -1,171 +1,62 @@
-import { LatestPost } from "~/app/_components/post";
-import { TrackCard } from "~/components/track/TrackCard";
-import { TrackSearch } from "~/components/track/TrackSearch";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import Link from "next/link";
 import { Button } from "~/components/ui/button";
-
-import { PrettyObject } from "~/components/util/PrettyObject";
+import { UniversalSearch } from "~/components/search/UniversalSearch";
+import { CommunityFeed } from "~/components/playlist/CommunityFeed";
 import { getSession } from "~/server/better-auth/server";
-import { api, HydrateClient } from "~/trpc/server";
+import { HydrateClient } from "~/trpc/server";
+import { Library, Plus } from "lucide-react";
 
 export default async function Home() {
   const session = await getSession();
 
-  // const search = await api.spotify.search();
-
-  const soundcloudTrackSearch = await api.soundcloud.search({
-    query: "no broke boys",
-  });
-
-  // const firstSong = soundcloudTrackSearch.collection[0];
-
-  if (session) {
-    void api.post.getLatest.prefetch();
-  }
-
   return (
     <HydrateClient>
-      <main className="min-h-screen bg-background text-foreground">
-        <section className="border-b-4 border-foreground bg-secondary text-secondary-foreground">
-          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-[1.2fr_0.8fr]">
-            <div className="space-y-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.4em]">
+      <main className="bg-background text-foreground min-h-screen">
+        {/* Hero Section */}
+        <section className="border-foreground bg-secondary text-secondary-foreground border-b-4">
+          <div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
+            <div className="mx-auto max-w-3xl space-y-6 text-center">
+              <h1 className="text-5xl font-black tracking-[0.12em] uppercase md:text-6xl">
                 OnePlaylist
-              </p>
-              <h1 className="text-4xl font-black uppercase tracking-[0.12em]">
-                Unify your crates
               </h1>
-              <p className="max-w-xl text-sm text-secondary-foreground/80">
-                Build playlists that live beyond a single platform. Connect
-                services, pull tracks in, and route everything through one
-                brutalist dashboard.
+              <p className="text-secondary-foreground/80 mx-auto max-w-2xl text-base md:text-lg">
+                Build playlists that live beyond a single platform.
               </p>
-              <div className="flex flex-wrap gap-3">
-                <Button className="font-black uppercase tracking-[0.3em]">
-                  Start a crate
-                </Button>
-                <Button
-                  variant="outline"
-                  className="bg-background text-foreground font-black uppercase tracking-[0.3em]"
-                >
-                  See live demo
-                </Button>
-              </div>
-              {session && (
-                <p className="text-xs uppercase tracking-[0.3em] text-secondary-foreground/70">
-                  Logged in as {session.user?.name}
-                </p>
+              {session?.user && (
+                <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+                  <Button
+                    asChild
+                    variant="default"
+                    size="lg"
+                    className="border-foreground border-2 font-black tracking-[0.3em] uppercase shadow-[4px_4px_0_var(--foreground)] transition-all hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_var(--foreground)]"
+                  >
+                    <Link href="/library">
+                      <Library className="mr-2 size-5" />
+                      My Library
+                    </Link>
+                  </Button>
+                </div>
               )}
             </div>
-
-            <Card className="border-foreground bg-background text-foreground">
-              <CardHeader className="border-b-2 border-foreground">
-                <CardTitle className="text-lg font-black uppercase tracking-[0.2em]">
-                  Palette B live
-                </CardTitle>
-                <CardDescription className="text-sm uppercase tracking-[0.2em]">
-                  Acid lime, ink, and noise.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4 pt-4">
-                <div className="flex flex-wrap gap-2 text-[0.65rem] font-semibold uppercase tracking-[0.3em]">
-                  <span className="border-2 border-foreground bg-primary px-3 py-2 text-primary-foreground">
-                    Primary
-                  </span>
-                  <span className="border-2 border-foreground bg-accent px-3 py-2 text-accent-foreground">
-                    Accent
-                  </span>
-                  <span className="border-2 border-foreground bg-muted px-3 py-2 text-muted-foreground">
-                    Muted
-                  </span>
-                </div>
-                <div className="border-2 border-foreground bg-card px-3 py-2 text-xs uppercase tracking-[0.35em]">
-                  Cross-platform routing enabled
-                </div>
-              </CardContent>
-              <CardFooter className="justify-between border-t-2 border-foreground pt-4">
-                <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-                  3 services ready
-                </span>
-                <Button
-                  variant="secondary"
-                  className="font-black uppercase tracking-[0.3em]"
-                >
-                  Open settings
-                </Button>
-              </CardFooter>
-            </Card>
           </div>
         </section>
 
+        {/* Universal Search Section */}
+        <section className="mx-auto max-w-6xl px-4 py-10">
+          <UniversalSearch isLoggedIn={!!session} />
+        </section>
+
+        {/* Community Feed Section */}
         <section className="mx-auto max-w-6xl space-y-6 px-4 py-10">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h2 className="text-xl font-black uppercase tracking-[0.2em]">
-                Track intake
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Pull tracks from connected services and stack them into crates.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" className="uppercase tracking-[0.3em]">
-                Connect service
-              </Button>
-              <Button variant="default" className="uppercase tracking-[0.3em]">
-                New playlist
-              </Button>
-            </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black tracking-[0.2em] uppercase">
+              Community Playlists
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Discover public playlists created by the community
+            </p>
           </div>
-
-          <Card className="border-foreground bg-card">
-            <CardHeader className="border-b-2 border-foreground">
-              <CardTitle className="text-base font-black uppercase tracking-[0.3em]">
-                Search SoundCloud
-              </CardTitle>
-              <CardDescription className="text-xs uppercase tracking-[0.3em]">
-                Drop results into your queue.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-4">
-              <TrackSearch />
-              <div className="grid gap-3 md:grid-cols-2">
-                {soundcloudTrackSearch.collection.map((track) => (
-                  <TrackCard
-                    key={track.id}
-                    artworkUrl={track.artwork_url}
-                    title={track.title}
-                    artist={track.user.username}
-                    duration={track.duration}
-                    id={track.id}
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <div>{session?.user && <LatestPost />}</div>
-
-          <Card className="border-foreground bg-muted">
-            <CardHeader className="border-b-2 border-foreground">
-              <CardTitle className="text-base font-black uppercase tracking-[0.3em]">
-                Debug payload
-              </CardTitle>
-              <CardDescription className="text-xs uppercase tracking-[0.3em]">
-                First search result snapshot.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <PrettyObject>{soundcloudTrackSearch.collection[0]}</PrettyObject>
-            </CardContent>
-          </Card>
+          <CommunityFeed />
         </section>
       </main>
     </HydrateClient>

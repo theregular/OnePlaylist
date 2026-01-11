@@ -1,7 +1,10 @@
+export type TrackPlatform = "spotify" | "soundcloud";
+
 export type Track = {
-    title: string,
-    artist: string,
-    duration: number,
-    artworkUrl?: string,
-    id: number
-}
+  platform: TrackPlatform;
+  platformTrackId: string;
+  title: string;
+  artist: string;
+  duration?: number;
+  artworkUrl?: string;
+};

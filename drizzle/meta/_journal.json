@@ -8,6 +8,13 @@
       "when": 1765856564439,
       "tag": "0000_fine_mauler",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1768120278084,
+      "tag": "0001_peaceful_millenium_guard",
+      "breakpoints": true
     }
   ]
 }
