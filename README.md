@@ -1,5 +1,17 @@
 # OnePlaylist
 
+OnePlaylist is an web app to help you easily create and manage playlists that include songs from multiple music streaming platforms.
+
+The goal is to reduce platform lock-in and give users a unified way to organize and share their music, regardless of where it lives.
+
+## Features
+
+- Authenticate with supported platforms
+
+- Create cross-platform playlists
+
+- Sync and manage tracks without manually recreating playlists on each service
+
 ## Tech
 
 - [Next.js](https://nextjs.org)
@@ -11,27 +23,16 @@
 
 ## Integrations
 
+### Currently Supported
+
 - Spotify
 - SoundCloud
 
-### To-Add
+### Planned Integrations
 
 - Bandcamp
 
 ## SDKs
 
 - @spotify/web-api-ts-sdk
-- [soundcloud.ts](<https://moestash.github.io/soundcloud.ts>)
-
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## Deployment options
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- [soundcloud.ts](https://moestash.github.io/soundcloud.ts)

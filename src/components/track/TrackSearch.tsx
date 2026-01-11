@@ -17,37 +17,40 @@ export function TrackSearch() {
     });
 
     return (
-        <div className="w-200">
-            <Popover open={open} onOpenChange={setOpen}>
-                <PopoverAnchor>
-                    <Input
-                        placeholder="Type to search..."
-                        value={search}
-                        onChange={(e) => {
-                            setSearch(e.target.value);
-                            setOpen(true);
-                        }}
-                        onFocus={() => setOpen(true)}
-                    />
-                </PopoverAnchor>
-                <PopoverContent
-                    onOpenAutoFocus={(e) => e.preventDefault()}
-                    className="w-full max-h-200 overflow-auto"
-                >
-                    {trackSearch.data
-                        ? trackSearch.data.collection.map((track) => (
-                            <TrackCard
-                                key={track.id}
-                                artworkUrl={track.artwork_url}
-                                title={track.title}
-                                artist={track.user.username}
-                                duration={track.duration}
-                                id={track.id}
-                            />
-                        ))
-                        : <div>NO RESULTS</div>}
-                </PopoverContent>
-            </Popover>
-        </div>
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverAnchor>
+                <Input
+                    className="w-200"
+                    placeholder="Type to search..."
+                    value={search}
+                    onChange={(e) => {
+                        setSearch(e.target.value);
+                        setOpen(true);
+                    }}
+                    onFocus={() => search && setOpen(true)}
+                />
+            </PopoverAnchor>
+            <PopoverContent
+                onOpenAutoFocus={(e) => e.preventDefault()}
+                className="max-h-200 overflow-auto w-200"
+                align="start"
+            >
+                {trackSearch.data?.collection &&
+                        trackSearch.data?.collection.length > 0
+                    ? trackSearch.data.collection.map((track) => (
+                        <TrackCard
+                            key={track.id}
+                            artworkUrl={track.artwork_url}
+                            title={track.title}
+                            artist={track.user.username}
+                            duration={track.duration}
+                            id={track.id}
+                        />
+                    ))
+                    : trackSearch.isLoading
+                    ? <div>Loading...</div>
+                    : <div>NO RESULTS</div>}
+            </PopoverContent>
+        </Popover>
     );
 }
