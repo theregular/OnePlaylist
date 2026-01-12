@@ -3,7 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { User, LogOut, Settings, Library } from "lucide-react";
+import { User, LogOut, Settings, Library, Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
   Popover,
@@ -23,6 +24,25 @@ interface UserMenuProps {
 
 export function UserMenu({ user }: UserMenuProps) {
   const router = useRouter();
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem("oneplaylist-theme");
+    const prefersDark = window.matchMedia?.(
+      "(prefers-color-scheme: dark)",
+    ).matches;
+    const next = stored ? stored === "dark" : prefersDark;
+    setIsDark(next);
+  }, []);
+
+  const handleToggleTheme = () => {
+    setIsDark((prev) => {
+      const next = !prev;
+      document.documentElement.classList.toggle("dark", next);
+      window.localStorage.setItem("oneplaylist-theme", next ? "dark" : "light");
+      return next;
+    });
+  };
 
   const handleLogout = async () => {
     await authClient.signOut();
@@ -85,6 +105,23 @@ export function UserMenu({ user }: UserMenuProps) {
             >
               <Settings className="mr-2 size-4" />
               Settings
+            </Button>
+            <Button
+              onClick={handleToggleTheme}
+              variant="ghost"
+              className="hover:bg-foreground hover:text-background w-full justify-start text-xs font-semibold tracking-[0.25em] uppercase"
+            >
+              {isDark ? (
+                <>
+                  <Sun className="mr-2 size-4" />
+                  Light Mode
+                </>
+              ) : (
+                <>
+                  <Moon className="mr-2 size-4" />
+                  Dark Mode
+                </>
+              )}
             </Button>
             <Button
               onClick={handleLogout}

@@ -11,6 +11,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import Image from "next/image";
 
 export default async function PlaylistDetailPage({
   params,
@@ -140,9 +141,11 @@ export default async function PlaylistDetailPage({
 
               {/* Artwork */}
               {track.artworkUrl ? (
-                <img
+                <Image
                   src={track.artworkUrl}
                   alt={track.title}
+                  width={64}
+                  height={64}
                   className="border-foreground size-16 border-2 object-cover"
                 />
               ) : (
